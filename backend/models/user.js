@@ -54,7 +54,7 @@ const UserSchema = new mongoose.Schema(
 
 UserSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -66,7 +66,7 @@ UserSchema.pre("save", async function (next) {
 UserSchema.methods.generateJwtFromUser = function () {
   const { JWT_SECRET_KEY, JWT_EXPIRE } = process.env;
 
-  payload = {
+  const payload = {
     id: this._id,
     username: this.username,
     email: this.email,
